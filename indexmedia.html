@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Présence Médiatique | EDUCIT.MA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    .media-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(201,152,42,0.12);
+      border: 1px solid rgba(201,152,42,0.3);
+      border-radius: 40px;
+      padding: 0.6rem 1.6rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem;
+      color: var(--gold-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.6rem;
+    }
+    .media-kicker-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    .interview-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5.6rem;
+    }
+
+    .interview-card {
+      background: var(--white);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--cream-dark);
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .interview-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(201,152,42,0.3);
+    }
+    .interview-card-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light) 60%, transparent);
+    }
+
+    /* Featured card (reportage) — red accent bar */
+    .interview-card.featured .interview-card-bar {
+      background: linear-gradient(90deg, #C10F0D, var(--gold) 60%, transparent);
+    }
+    .interview-card.featured { border-color: rgba(193,15,13,0.12); }
+    .interview-card.featured:hover { border-color: rgba(193,15,13,0.28); }
+
+    .interview-card-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    /* ── Video side ── */
+    .interview-video-side {
+      position: relative;
+      background: var(--navy);
+    }
+    /* Carousel: hide all, show .active */
+    .interview-carousel-container .interview-video-side { display: none; }
+    .interview-carousel-container .interview-video-side.active { display: block; }
+
+    .interview-carousel-container { position: relative; width: 100%; }
+
+    /* Carousel hint: nudge left once on load so user sees there's more */
+    @keyframes carousel-hint {
+      0%   { transform: translateX(0); }
+      20%  { transform: translateX(-22px); }
+      40%  { transform: translateX(0); }
+      58%  { transform: translateX(-12px); }
+      74%  { transform: translateX(0); }
+      100% { transform: translateX(0); }
+    }
+    .carousel-hint-slide {
+      animation: carousel-hint 1.8s cubic-bezier(0.4,0,0.2,1) 1.4s both;
+    }
+
+    /* Fading badge "Vidéo suivante →" */
+    .carousel-hint-badge {
+      position: absolute;
+      top: 1.6rem; right: 1.6rem;
+      background: rgba(201,152,42,0.93);
+      color: var(--navy);
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      pointer-events: none;
+      animation: badge-pop 3.4s ease-in-out 1.4s forwards;
+    }
+    @keyframes badge-pop {
+      0%   { opacity: 0; transform: translateY(-8px); }
+      12%  { opacity: 1; transform: translateY(0); }
+      72%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .carousel-hint-badge svg {
+      animation: arrow-pulse 0.55s ease-in-out 1.8s 4;
+    }
+    @keyframes arrow-pulse {
+      0%, 100% { transform: translateX(0); }
+      50%       { transform: translateX(5px); }
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      background: rgba(13,27,42,0.70);
+      border: none;
+      color: var(--gold);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+      z-index: 5;
+    }
+    .carousel-btn:hover { background: rgba(13,27,42,0.92); }
+    .carousel-btn.prev { left: 1.6rem; }
+    .carousel-btn.next { right: 1.6rem; }
+
+    .carousel-controls {
+      position: absolute;
+      bottom: 1.6rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 1rem; z-index: 10;
+    }
+    .carousel-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(201,152,42,0.4);
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      transform: scale(1.25);
+    }
+
+    .interview-video-embed {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0; overflow: hidden; width: 100%;
+    }
+    .interview-video-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    .interview-video-label {
+      position: absolute;
+      top: 1.6rem; left: 1.6rem;
+      background: rgba(13,27,42,0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(201,152,42,0.3);
+      border-radius: 6px;
+      padding: 0.5rem 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+    .interview-video-label.label-featured {
+      color: #fff;
+      background: rgba(193,15,13,0.85);
+      border-color: rgba(193,15,13,0.35);
+    }
+
+    /* ── Content side ── */
+    .interview-content-side {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.4rem;
+    }
+
+    .interview-meta {
+      display: flex; align-items: center;
+      gap: 1.2rem; margin-bottom: 2.4rem; flex-wrap: wrap;
+    }
+    .interview-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem; color: var(--gold);
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .interview-tag.tag-featured { color: #C10F0D; }
+    .interview-meta-sep {
+      width: 4px; height: 4px;
+      border-radius: 50%; background: var(--cream-dark); flex-shrink: 0;
+    }
+    .interview-location-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem; color: var(--text-light); letter-spacing: 0.08em;
+    }
+
+    .interview-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--navy); line-height: 1.3; margin-bottom: 1.6rem;
+    }
+    .interview-title em { color: var(--gold); font-style: italic; }
+
+    .interview-summary {
+      font-size: 1.55rem; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 2.4rem;
+    }
+
+    /* Sectors grid (featured card) */
+    .sectors-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1rem; margin-bottom: 3rem;
+    }
+    .sector-pill {
+      background: var(--cream-dark);
+      border: 1px solid transparent; border-radius: 8px;
+      padding: 1rem 1.4rem;
+      display: flex; align-items: center; gap: 1rem;
+      transition: border-color var(--transition);
+    }
+    .sector-pill:hover { border-color: var(--gold); }
+    .sector-icon {
+      width: 32px; height: 32px;
+      background: var(--navy); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--gold);
+    }
+    .sector-icon svg { width: 16px; height: 16px; }
+    .sector-label {
+      font-size: 1.35rem; color: var(--text-mid);
+      font-weight: 500; line-height: 1.4;
+    }
+
+    .interview-chips {
+      display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 3rem;
+    }
+    .interview-chip {
+      background: var(--cream-dark); border-radius: 6px;
+      padding: 0.5rem 1.2rem; font-size: 1.3rem;
+      color: var(--text-mid); font-weight: 500;
+      border: 1px solid transparent;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .interview-chip:hover { border-color: var(--gold); color: var(--navy); }
+
+    .interview-highlights-toggle {
+      background: none;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 1.1rem 2rem;
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.4rem; font-weight: 500; color: var(--navy);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      align-self: flex-start;
+    }
+    .interview-highlights-toggle:hover {
+      background: var(--cream-dark); border-color: var(--gold);
+    }
+    .toggle-arrow { transition: transform var(--transition); flex-shrink: 0; }
+    .interview-highlights-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+    .interview-highlights-body {
+      display: none; margin-top: 2rem; padding: 2.4rem;
+      background: var(--cream); border-radius: 10px;
+      border-left: 3px solid var(--gold);
+    }
+    .interview-highlights-body.open { display: block; }
+
+    .highlights-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+    .highlights-list li {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      font-size: 1.5rem; color: var(--text-mid); line-height: 1.7;
+    }
+    .highlights-list li::before {
+      content: ''; display: block;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0; margin-top: 0.8rem;
+    }
+
+    .concepts-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem; margin-top: 2rem;
+    }
+    .concept-pill {
+      background: var(--white); border: 1px solid var(--cream-dark);
+      border-radius: 8px; padding: 1.2rem 1.6rem;
+    }
+    .concept-pill-term {
+      font-family: 'DM Mono', monospace; font-size: 1.1rem;
+      color: var(--gold); letter-spacing: 0.08em;
+      display: block; margin-bottom: 0.4rem;
+    }
+    .concept-pill-def { font-size: 1.35rem; color: var(--text-mid); line-height: 1.6; }
+
+    .mini-timeline { margin-top: 2rem; display: flex; flex-direction: column; }
+    .mini-timeline-row {
+      display: grid; grid-template-columns: 140px 1fr;
+      gap: 1.6rem; padding: 1.2rem 0;
+      border-bottom: 1px solid var(--cream-dark); align-items: start;
+    }
+    .mini-timeline-row:last-child { border-bottom: none; }
+    .mini-timeline-time {
+      font-family: 'DM Mono', monospace; font-size: 1.1rem;
+      color: var(--gold); letter-spacing: 0.06em; padding-top: 0.1rem;
+    }
+    .mini-timeline-desc { font-size: 1.45rem; color: var(--text-mid); line-height: 1.65; }
+
+    .watch-cta {
+      display: inline-flex; align-items: center; gap: 1rem;
+      background: var(--navy); color: var(--gold-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.4rem; font-weight: 600;
+      text-decoration: none; padding: 1.2rem 2.4rem;
+      border-radius: 8px; letter-spacing: 0.04em;
+      transition: background var(--transition), transform var(--transition);
+      align-self: flex-start;
+    }
+    .watch-cta:hover { background: var(--navy-mid); transform: translateX(4px); }
+    .watch-cta svg { flex-shrink: 0; }
+
+    /* Stats bar */
+    .interview-stats-bar {
+      display: flex; gap: 3rem; flex-wrap: wrap;
+      padding: 2.8rem 4rem;
+      background: var(--navy); border-radius: 12px;
+      margin: -2rem 0; position: relative; z-index: 1;
+    }
+    .interview-stat { display: flex; flex-direction: column; gap: 0.4rem; }
+    .interview-stat-val {
+      font-family: 'Playfair Display', serif; font-size: 2.6rem;
+      font-weight: 700; color: var(--gold-light); line-height: 1;
+    }
+    .interview-stat-label { font-size: 1.35rem; color: rgba(255,255,255,0.55); }
+
+    /* Section separator */
+    .media-section-sep {
+      display: flex; align-items: center; gap: 2rem; margin: 2rem 0;
+    }
+    .media-section-sep::before,
+    .media-section-sep::after {
+      content: ''; flex: 1; height: 1px; background: var(--cream-dark);
+    }
+    .media-section-sep-label {
+      font-family: 'DM Mono', monospace; font-size: 1.05rem;
+      color: var(--text-light); letter-spacing: 0.18em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Content below video — full width stacked */
+    .interview-content-side {
+      padding: 4rem;
+    }
+    .sectors-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 900px) {
+      .sectors-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .interview-content-side { padding: 2.4rem; }
+      .interview-title { font-size: 2rem; }
+      .interview-stats-bar { padding: 2.4rem; gap: 2rem; }
+      .sectors-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <span class="nav-logo-main">EDUCIT.MA</span>
+    <span class="nav-logo-sub">Programme Ibn Khaldoun</span>
+  </a>
+  <div id="mainListDiv" class="main_list">
+    <ul class="navlinks">
+      <li><a href="./index.html">Accueil</a></li>
+      <li><a href="./indexproj.html">Description du Projet</a></li>
+      <li><a href="./indexprog.html">Programme de Travail</a></li>
+      <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+      <li><a href="./indexconf.html">Conférences</a></li>
+      <li><a href="./indexmedia.html" class="active">Présence Médiatique</a></li>
+    </ul>
+  </div>
+  <span class="navTrigger"><i></i><i></i><i></i></span>
+</nav>
+
+<div class="page-wrapper">
+
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="media-kicker">
+        <span class="media-kicker-dot"></span>
+        Presse &amp; Médias
+      </div>
+      <h1 class="page-hero-title">Présence Médiatique du Projet</h1>
+      <p class="page-hero-lead">
+        Le projet EDUCIT.MA dans les médias : reportage de valorisation, interviews de presse et couvertures audiovisuelles témoignant du rayonnement scientifique de nos travaux sur l'éducation à la citoyenneté au Maroc.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="interview-list">
+
+      <!-- ════════════════════════════════════════════
+           FEATURED — Reportage de valorisation
+      ════════════════════════════════════════════ -->
+      <article class="interview-card featured fade-in">
+        <div class="interview-card-bar"></div>
+        <div class="interview-card-inner">
+
+          <div class="interview-video-side" style="display:block;">
+            <div class="interview-video-embed">
+              <iframe
+                src="https://www.youtube.com/embed/TEy9SKdj_3c"
+                title="Reportage de valorisation – Projet EDUCIT.MA"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy">
+              </iframe>
+            </div>
+            <span class="interview-video-label label-featured">Reportage · Valorisation</span>
+          </div>
+
+          <div class="interview-content-side">
+            <div>
+              <div class="interview-meta">
+                <span class="interview-tag tag-featured">Reportage audiovisuel</span>
+                <span class="interview-meta-sep"></span>
+                <span class="interview-location-tag">Production · Projet EDUCIT.MA</span>
+              </div>
+
+              <h2 class="interview-title">
+                Reportage de <em>valorisation</em> des activités du projet
+              </h2>
+
+              <p class="interview-summary">
+                Un reportage filmé a été réalisé afin de valoriser les différentes activités du projet — colloques internationaux, conférences et actions de formation — à travers une documentation visuelle. Il met en lumière les témoignages des étudiants, des académiques et des responsables impliqués, offrant un regard croisé sur les apports du projet et renforçant sa visibilité auprès d'un public élargi.
+              </p>
+
+              <p style="font-family:'DM Mono',monospace; font-size:1.05rem; color:var(--text-light); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.4rem;">Secteurs d'application</p>
+              <div class="sectors-grid">
+                <div class="sector-pill">
+                  <div class="sector-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                  </div>
+                  <span class="sector-label">Enseignement supérieur &amp; recherche</span>
+                </div>
+                <div class="sector-pill">
+                  <div class="sector-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                  </div>
+                  <span class="sector-label">Formation &amp; sensibilisation citoyenne</span>
+                </div>
+                <div class="sector-pill">
+                  <div class="sector-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <span class="sector-label">Secteur associatif</span>
+                </div>
+                <div class="sector-pill">
+                  <div class="sector-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  </div>
+                  <span class="sector-label">Communication institutionnelle</span>
+                </div>
+              </div>
+
+              <button class="interview-highlights-toggle" onclick="toggleHighlights(this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                Impact &amp; portée du reportage
+                <svg class="toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="interview-highlights-body">
+                <p style="font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:1.6rem;">Ce que le reportage met en valeur</p>
+                <ul class="highlights-list">
+                  <li>Les activités phares du projet — colloques internationaux, conférences scientifiques et actions de formation — documentés par une captation audiovisuelle professionnelle.</li>
+                  <li>La parole donnée aux différentes parties prenantes : étudiants bénéficiaires, académiques et responsables institutionnels offrent un regard croisé et authentique.</li>
+                  <li>L'impact scientifique, pédagogique et social des initiatives, illustré par des témoignages concrets issus des événements.</li>
+                  <li>Un outil de diffusion permettant de promouvoir les bonnes pratiques et de développer des collaborations académiques et sociales au-delà du périmètre du projet.</li>
+                </ul>
+              </div>
+            </div>
+
+            <a href="https://youtu.be/TEy9SKdj_3c" target="_blank" rel="noopener" class="watch-cta">
+              Visionner le reportage
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- Section separator -->
+      <div class="media-section-sep">
+        <span class="media-section-sep-label">Interviews &amp; couvertures de presse</span>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           INTERVIEW 1 — Colloque (carousel: 2 videos)
+      ════════════════════════════════════════════ -->
+      <article class="interview-card fade-in">
+        <div class="interview-card-bar"></div>
+        <div class="interview-card-inner">
+
+          <div class="interview-carousel-container">
+
+            <!-- Slide 1 -->
+            <div class="interview-video-side active carousel-hint-slide">
+              <div class="interview-video-embed">
+                <iframe
+                  src="https://www.youtube.com/embed/T9vpf9Xalo0?start=203"
+                  title="Colloque international – Université Ibn Tofail"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen loading="lazy">
+                </iframe>
+              </div>
+              <span class="interview-video-label">Interview · Colloque</span>
+              <div class="carousel-hint-badge">
+                Vidéo suivante
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="interview-video-side">
+              <div class="interview-video-embed">
+                <iframe
+                  src="https://www.youtube.com/embed/JqjaqKMj4sc"
+                  title="Colloque international – Canal Tamazight"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen loading="lazy">
+                </iframe>
+              </div>
+              <span class="interview-video-label">Interview · Canal Tamazight</span>
+            </div>
+
+            <button class="carousel-btn prev" onclick="prevVideo(this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="carousel-btn next" onclick="nextVideo(this)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="carousel-controls">
+              <span class="carousel-dot active" onclick="goToVideo(this, 0)"></span>
+              <span class="carousel-dot" onclick="goToVideo(this, 1)"></span>
+            </div>
+          </div>
+
+          <div class="interview-content-side">
+            <div>
+              <div class="interview-meta">
+                <span class="interview-tag">Colloque international</span>
+                <span class="interview-meta-sep"></span>
+                <span class="interview-location-tag">Université Ibn Tofail · Kénitra</span>
+              </div>
+
+              <h2 class="interview-title">
+                Colloque international pluridisciplinaire sur <em>l'éducation à la citoyenneté</em>
+              </h2>
+
+              <p class="interview-summary">
+                Ce reportage couvre le colloque international organisé à l'Université Ibn Tofail de Kénitra, placé sous le patronage de Sa Majesté le Roi Mohammed VI. L'événement réunit juristes, économistes, chercheurs et représentants du monde culturel. <strong style="color:var(--navy);">Deux couvertures disponibles</strong> — naviguez entre les deux interviews avec les flèches ou les points.
+              </p>
+
+              <div class="interview-chips">
+                <span class="interview-chip">Pluridisciplinarité</span>
+                <span class="interview-chip">Intelligence artificielle</span>
+                <span class="interview-chip">Rôle des notaires</span>
+                <span class="interview-chip">Coopération internationale</span>
+                <span class="interview-chip">Jeunesse marocaine</span>
+              </div>
+
+              <button class="interview-highlights-toggle" onclick="toggleHighlights(this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                Points clés &amp; chronologie
+                <svg class="toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="interview-highlights-body">
+                <p style="font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:1.6rem;">Points saillants</p>
+                <ul class="highlights-list">
+                  <li>Le colloque s'articule en deux journées : ateliers sur les approches juridique, économique et sociale de la citoyenneté (J1), puis focus sur le rôle de l'intelligence artificielle (J2).</li>
+                  <li>Le Conseil régional des notaires joue un rôle de partenaire stratégique, soulignant la mission civique du notaire à l'échelle nationale, continentale et internationale.</li>
+                  <li>Les jeunes sont encouragés à développer des compétences linguistiques, des soft skills et une culture juridique pour intégrer le marché du travail avec un profil complet.</li>
+                  <li>La présence de l'ambassadeur du Kazakhstan illustre la dimension de coopération académique internationale.</li>
+                </ul>
+                <p style="font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.12em; text-transform:uppercase; margin: 2.4rem 0 1.2rem;">Chronologie</p>
+                <div class="mini-timeline">
+                  <div class="mini-timeline-row">
+                    <span class="mini-timeline-time">00:00 – 02:06</span>
+                    <span class="mini-timeline-desc">Introduction; thème « Éducation à la citoyenneté ».</span>
+                  </div>
+                  <div class="mini-timeline-row">
+                    <span class="mini-timeline-time">01:03 – 02:58</span>
+                    <span class="mini-timeline-desc">Structure du colloque ; participation des notaires et ateliers pluridisciplinaires.</span>
+                  </div>
+                  <div class="mini-timeline-row">
+                    <span class="mini-timeline-time">02:02 – 03:23</span>
+                    <span class="mini-timeline-desc">Diversité des participants ; formation globale des jeunes.</span>
+                  </div>
+                  <div class="mini-timeline-row">
+                    <span class="mini-timeline-time">02:42 – 03:59</span>
+                    <span class="mini-timeline-desc">Défis de la jeunesse, conscience juridique et insertion professionnelle.</span>
+                  </div>
+                  <div class="mini-timeline-row">
+                    <span class="mini-timeline-time">03:20 – 04:46</span>
+                    <span class="mini-timeline-desc">Coopération internationale avec le Kazakhstan.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a href="https://www.youtube.com/watch?v=T9vpf9Xalo0&t=203s" target="_blank" rel="noopener" class="watch-cta">
+              Voir l'interview complète
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- ════════════════════════════════════════════
+           INTERVIEW 2 — Modèle de développement
+      ════════════════════════════════════════════ -->
+      <article class="interview-card fade-in fade-in-delay-2">
+        <div class="interview-card-bar"></div>
+        <div class="interview-card-inner">
+
+          <div class="interview-video-side" style="display:block;">
+            <div class="interview-video-embed">
+              <iframe
+                src="https://www.youtube.com/embed/71D0302YWEQ"
+                title="Modèle de développement dans les provinces du Sud – Université Ibn Tofail"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy">
+              </iframe>
+            </div>
+            <span class="interview-video-label">Interview · Débat académique</span>
+          </div>
+
+          <div class="interview-content-side">
+            <div>
+              <div class="interview-meta">
+                <span class="interview-tag">Débat académique</span>
+                <span class="interview-meta-sep"></span>
+                <span class="interview-location-tag">Faculté des Sciences Juridiques et Politiques · Ibn Tofail</span>
+              </div>
+
+              <h2 class="interview-title">
+                Le <em>modèle de développement</em> dans les provinces du Sud : citoyenneté et identité nationale
+              </h2>
+
+              <p class="interview-summary">
+                Cette discussion, organisée à l'Université Ibn Tofail, explore l'articulation entre identité nationale, citoyenneté et développement économique régional dans les provinces du Sud du Maroc. Les intervenants appellent la jeunesse qualifiée — ingénieurs, économistes, artistes — à s'investir activement dans ces régions comme acte de civisme.
+              </p>
+
+              <div class="interview-chips">
+                <span class="interview-chip">Provinces du Sud</span>
+                <span class="interview-chip">Identité nationale</span>
+                <span class="interview-chip">Jeunesse qualifiée</span>
+                <span class="interview-chip">Patrimoine Hassani</span>
+                <span class="interview-chip">Diplomatie universitaire</span>
+              </div>
+
+              <button class="interview-highlights-toggle" onclick="toggleHighlights(this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                Points clés &amp; enjeux
+                <svg class="toggle-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="interview-highlights-body">
+                <p style="font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:1.6rem;">Points saillants</p>
+                <ul class="highlights-list">
+                  <li>Le projet s'inscrit dans une démarche d'« Éducation à la citoyenneté » : construire un tissu social sain passe par l'engagement des jeunes Marocains envers l'intégrité territoriale du pays.</li>
+                  <li>Au-delà de la territorialité, la discussion se concentre sur un développement actif : investissement dans le patrimoine immatériel tel que la langue Hassanie, le théâtre et les arts locaux.</li>
+                  <li>L'université est pensée comme une plateforme de « diplomatie non officielle », dotant les étudiants des outils pour défendre les causes nationales sur la scène internationale.</li>
+                  <li>Cet événement s'inscrit dans une série d'activités scientifiques planifiées par la Faculté des Sciences Juridiques et Politiques pour mettre en valeur le développement régional.</li>
+                </ul>
+                <p style="font-family:'DM Mono',monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.12em; text-transform:uppercase; margin: 2.4rem 0 1.2rem;">Concepts abordés</p>
+                <div class="concepts-grid">
+                  <div class="concept-pill">
+                    <span class="concept-pill-term">Citoyenneté territoriale</span>
+                    <span class="concept-pill-def">Engagement civique envers l'intégrité des frontières nationales comme devoir citoyen.</span>
+                  </div>
+                  <div class="concept-pill">
+                    <span class="concept-pill-term">Patrimoine immatériel</span>
+                    <span class="concept-pill-def">Langue Hassanie, théâtre, arts et culture locale comme vecteurs d'identité régionale.</span>
+                  </div>
+                  <div class="concept-pill">
+                    <span class="concept-pill-term">Diplomatie universitaire</span>
+                    <span class="concept-pill-def">L'université comme espace de défense des causes nationales sur la scène internationale.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a href="https://www.youtube.com/watch?v=71D0302YWEQ" target="_blank" rel="noopener" class="watch-cta">
+              Voir l'interview complète
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </article>
+
+    </div><!-- /.interview-list -->
+  </section>
+
+  <div class="partners-bar">
+    <p class="partners-label">Partenaires institutionnels</p>
+    <div class="partners-logos">
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_7af266ec74694aa6b21891de2cc32201~mv2.png/v1/fill/w_350,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-MEN1_0.png" alt="Ministère de l'Éducation Nationale"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_c2ffa999277e4f44bf6fd7a3a6f6cfeb~mv2.png/v1/fill/w_121,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/image_2021-03-01_213712.png" alt="Partenaire 2"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_21bc5ecfe2dd433081975602a57ac1cd~mv2.png/v1/fill/w_150,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-1.png" alt="Partenaire 3"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">EDUCIT.MA</div>
+        <div class="footer-brand-sub">Programme Ibn Khaldoun</div>
+        <p class="footer-brand-desc">Recherche scientifique sur l'éducation à la citoyenneté dans la société marocaine.</p>
+      </div>
+      <div>
+        <p class="footer-heading">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="./index.html">Accueil</a></li>
+          <li><a href="./indexproj.html">Description du Projet</a></li>
+          <li><a href="./indexprog.html">Programme de Travail</a></li>
+          <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+          <li><a href="./indexconf.html">Conférences</a></li>
+          <li><a href="./indexmedia.html">Présence Médiatique</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-heading">Institution</p>
+        <ul class="footer-links">
+          <li><a href="#">Université Ibn Tofail</a></li>
+          <li><a href="#">ENCG · Kénitra</a></li>
+          <li><a href="#">Ministère de l'Éducation</a></li>
+          <li><a href="#">CNRST</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 EDUCIT.MA · Tous droits réservés</span>
+      <span>Pr El Adlouni Wafaa · <span class="footer-gold">Université Ibn Tofail</span></span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js"></script>
+<script>
+  function toggleHighlights(btn) {
+    btn.classList.toggle('open');
+    btn.nextElementSibling.classList.toggle('open');
+  }
+
+  function getCarouselContainer(el) {
+    return el.closest('.interview-carousel-container');
+  }
+  function updateCarousel(container, index) {
+    container.querySelectorAll('.interview-video-side').forEach((v, i) =>
+      v.classList.toggle('active', i === index));
+    container.querySelectorAll('.carousel-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === index));
+  }
+  function nextVideo(btn) {
+    const c = getCarouselContainer(btn);
+    const vids = c.querySelectorAll('.interview-video-side');
+    const cur  = Array.from(vids).findIndex(v => v.classList.contains('active'));
+    updateCarousel(c, (cur + 1) % vids.length);
+  }
+  function prevVideo(btn) {
+    const c = getCarouselContainer(btn);
+    const vids = c.querySelectorAll('.interview-video-side');
+    const cur  = Array.from(vids).findIndex(v => v.classList.contains('active'));
+    updateCarousel(c, (cur - 1 + vids.length) % vids.length);
+  }
+  function goToVideo(dot, index) {
+    updateCarousel(dot.closest('.interview-carousel-container'), index);
+  }
+</script>
+</body>
+</html>

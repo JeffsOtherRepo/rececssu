@@ -1,48 +1,197 @@
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="main.js"></script>
-<link rel="stylesheet" href="style.css">
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <title>Programme de Travail | RECECSSU</title>
-  <meta name="viewport" content="width=1024">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programme de Travail | EDUCIT.MA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
+<body>
 
-<nav class="nav">
-        <div class="container">
-            </div>
-            <div id="mainListDiv" class="main_list">
-                <ul class="navlinks">
-                    <li><a href="./index.html">Accueil</a></li>
-                    <li><a href="./indexproj.html">Description du Projet</a></li>
-                    <li><a style="color:#C10F0D" href="./indexprog.html">Programme de Travail</a></li>
-                    <li><a href="./indeximpact.html">Impacts Potentiels du Projet</a></li>
-					<li><a href="./indexconf.html">Conférences</a></li>
-                </ul>
-            </div>
-            <span class="navTrigger">
-                <i></i>
-                <i></i>
-                <i></i>
-            </span>
-        </div>
+<nav class="nav" id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <span class="nav-logo-main">EDUCIT.MA</span>
+    <span class="nav-logo-sub">Programme Ibn Khaldoun</span>
+  </a>
+  <div id="mainListDiv" class="main_list">
+    <ul class="navlinks">
+      <li><a href="./index.html">Accueil</a></li>
+      <li><a href="./indexproj.html">Description du Projet</a></li>
+      <li><a href="./indexprog.html" class="active">Programme de Travail</a></li>
+      <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+      <li><a href="./indexconf.html">Conférences</a></li>
+      <li><a href="./indexmedia.html" >Présence Médiatique</a></li>
+    </ul>
+  </div>
+  <span class="navTrigger"><i></i><i></i><i></i></span>
 </nav>
 
-<iframe src="" id="prog"
-style="
-position:fixed;
-top:-130;
-left:0;
-bottom:0;
-right:0;
-width:100%;
-height:120%;
-border:0;
-margin:0;
-padding:0;
-overflow:hidden;
-z-index:0;
-">
-</iframe>
+<div class="page-wrapper">
 
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-label">Méthodologie</span>
+      <h1 class="page-hero-title">Programme de Travail</h1>
+      <p class="page-hero-lead">
+        Exercer sa citoyenneté, c'est participer à la vie économique, politique, sociale et culturelle de la cité en exerçant ses droits et en assumant ses responsabilités.
+      </p>
+    </div>
+  </section>
 
+  <div class="prose-section">
+    <div class="prose-inner">
+      <div class="fade-in" style="
+        background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+        border-radius: 16px;
+        padding: 4rem;
+        margin: 4rem 0;
+        border-left: 5px solid var(--gold);
+      ">
+        <p style="font-family:'DM Mono', monospace; font-size:1.15rem; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.6rem;">Ce projet, c'est…</p>
+        <p style="font-family:'Playfair Display', serif; font-size:2.2rem; color:var(--white); line-height:1.55; margin:0; font-style:italic;">
+          Ce projet sur l'éducation à la citoyenneté se concrétise à travers des activités de sensibilisation et la connaissance de sujets aussi divers que les droits de l'homme, la santé, le patrimoine culturel, l'histoire et l'économie.
+        </p>
+      </div>
+    </div>
+  </div>
 
+  <!-- PROGRAMME LIST -->
+  <section class="section" style="padding-top:2rem;">
+    <ul class="programme-list">
+
+      <li class="programme-item fade-in">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Technologie éducative responsable</strong>
+          La mise en action d'une technologie éducative responsable et interactive, qui a pour but de former des aptitudes sociales chez les jeunes pour pouvoir identifier, éviter, réagir, prévenir et surmonter les phénomènes sociaux de la violence, de l'intolérance, et développer une attitude active et tolérante face à la différence.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-1">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Pensée critique &amp; médias</strong>
+          Responsabiliser et former les jeunes à une pensée critique à travers l'analyse et le décryptage des messages que véhiculent Internet et les médias. Sources précieuses d'information qui profitent de leur grande accessibilité mais qui constituent un réel danger par le caractère illégal de certains contenus.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-2">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Égalité de genre</strong>
+          Éduquer au genre et à l'égalité entre les deux sexes. Il est nécessaire de proposer de nouvelles approches du genre à l'école pour surmonter les préjugés sexistes, motiver les élèves à prendre des responsabilités égales et à respecter la dignité humaine.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-3">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Éducation aux médias</strong>
+          Initier les élèves dans les établissements scolaires aux techniques, aux pratiques et aux langages des médias, par l'analyse de l'image des documentaires, des émissions et des reportages afin de développer leurs compétences de pensée critique.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-4">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Micro-projets &amp; intégration</strong>
+          L'intégration des jeunes dans le système des activités liées à l'exécution de micro-projets permet la réalisation de l'éducation à la citoyenneté sous des formes différentes et originales par rapport aux cours traditionnels, comme des trainings, des rencontres avec des spécialistes, des visites, etc.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-5">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><path d="M2 12h20"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Interaction plurielle</strong>
+          Mettre en interaction le monde scientifique, le monde politique et la société civile dans des approches plurielles, favorisant le partage des idées et des pratiques pédagogiques et motivant les jeunes à l'auto-apprentissage.
+        </p>
+      </li>
+
+      <li class="programme-item fade-in fade-in-delay-6">
+        <div class="programme-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <p class="programme-text">
+          <strong style="color:var(--navy); display:block; margin-bottom:0.6rem; font-size:1.7rem;">Partenariats institutionnels</strong>
+          L'engagement du Ministère de l'Enseignement Supérieur, de la Recherche Scientifique et de l'Innovation, des structures du pouvoir local ainsi que des organisations non gouvernementales comme partenaires permet de créer des partenariats durables pour développer la société civile et le dialogue interculturel.
+        </p>
+      </li>
+
+    </ul>
+  </section>
+
+  <div class="partners-bar">
+    <p class="partners-label">Partenaires institutionnels</p>
+    <div class="partners-logos">
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_7af266ec74694aa6b21891de2cc32201~mv2.png/v1/fill/w_350,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-MEN1_0.png" alt="MEN"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_c2ffa999277e4f44bf6fd7a3a6f6cfeb~mv2.png/v1/fill/w_121,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/image_2021-03-01_213712.png" alt="Partenaire 2"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_21bc5ecfe2dd433081975602a57ac1cd~mv2.png/v1/fill/w_150,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-1.png" alt="Partenaire 3"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">EDUCIT.MA</div>
+        <div class="footer-brand-sub">Programme Ibn Khaldoun</div>
+        <p class="footer-brand-desc">Recherche scientifique sur l'éducation à la citoyenneté dans la société marocaine.</p>
+      </div>
+      <div>
+        <p class="footer-heading">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="./index.html">Accueil</a></li>
+          <li><a href="./indexproj.html">Description du Projet</a></li>
+          <li><a href="./indexprog.html">Programme de Travail</a></li>
+          <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+          <li><a href="./indexconf.html">Conférences</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-heading">Institution</p>
+        <ul class="footer-links">
+          <li><a href="#">Université Ibn Tofail</a></li>
+          <li><a href="#">ENCG · Kénitra</a></li>
+          <li><a href="#">Ministère de l'Enseignement Supérieur, de la Recherche Scientifique et de l'Innovation</a></li>
+          <li><a href="#">Centre National pour la Recherche Scientifique et Technique (CNRST)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 EDUCIT.MA · Tous droits réservés</span>
+      <span>Pr El Adlouni Wafaa · <span class="footer-gold">Université Ibn Tofail</span></span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

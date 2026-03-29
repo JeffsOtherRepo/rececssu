@@ -1,48 +1,154 @@
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="main.js"></script>
-<link rel="stylesheet" href="style.css">
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <title>Impacts Potentiels du Projet | RECECSSU</title>
-  <meta name="viewport" content="width=1024">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impacts Potentiels du Projet | EDUCIT.MA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
+<body>
 
-<nav class="nav">
-        <div class="container">
-            </div>
-            <div id="mainListDiv" class="main_list">
-                <ul class="navlinks">
-                    <li><a href="./index.html">Accueil</a></li>
-                    <li><a href="./indexproj.html">Description du Projet</a></li>
-                    <li><a href="./indexprog.html">Programme de Travail</a></li>
-                    <li><a style="color:#C10F0D" href="./indeximpact.html">Impacts Potentiels du Projet</a></li>
-					<li><a href="./indexconf.html">Conférences</a></li>
-                </ul>
-            </div>
-            <span class="navTrigger">
-                <i></i>
-                <i></i>
-                <i></i>
-            </span>
-        </div>
+<nav class="nav" id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <span class="nav-logo-main">EDUCIT.MA</span>
+    <span class="nav-logo-sub">Programme Ibn Khaldoun</span>
+  </a>
+  <div id="mainListDiv" class="main_list">
+    <ul class="navlinks">
+      <li><a href="./index.html">Accueil</a></li>
+      <li><a href="./indexproj.html">Description du Projet</a></li>
+      <li><a href="./indexprog.html">Programme de Travail</a></li>
+      <li><a href="./indeximpact.html" class="active">Impacts Potentiels</a></li>
+      <li><a href="./indexconf.html">Conférences</a></li>
+      <li><a href="./indexmedia.html" >Présence Médiatique</a></li>
+    </ul>
+  </div>
+  <span class="navTrigger"><i></i><i></i><i></i></span>
 </nav>
 
-<iframe src="" id="impact"
-style="
-position:fixed;
-top:-130;
-left:0;
-bottom:0;
-right:0;
-width:100%;
-height:120%;
-border:0;
-margin:0;
-padding:0;
-overflow:hidden;
-z-index:0;
-">
-</iframe>
+<div class="page-wrapper">
 
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-label">Résultats attendus</span>
+      <h1 class="page-hero-title">Impacts Potentiels du Projet</h1>
+      <p class="page-hero-lead">
+        L'université va jouer un rôle actif et créatif dans la redéfinition de la notion de citoyenneté au service d'un nouveau projet civilisationnel.
+      </p>
+    </div>
+  </section>
 
+  <!-- Intro -->
+  <section class="section" style="padding-bottom:2rem;">
+    <div style="max-width:820px;" class="fade-in">
+      <span class="section-label">Vision</span>
+      <h2 class="section-title">Impacts <em>scientifiques, culturels</em> &amp; socioéconomiques</h2>
+      <div class="section-divider"></div>
+      <p style="font-size:1.7rem; color:var(--text-mid); line-height:1.85;">
+        En posant les fondements d'un enseignement responsable, le projet entend redéfinir les priorités sur les plans scientifique, culturel et socio-économique, au bénéfice de la jeunesse marocaine et de la société dans son ensemble.
+      </p>
+    </div>
+  </section>
 
+  <!-- Impact cards -->
+  <section class="section" style="padding-top:2rem;">
+    <div class="impact-cards">
+
+      <div class="impact-card fade-in">
+        <div class="impact-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 class="impact-title">Vertus civiques &amp; libertés individuelles</h3>
+        <p class="impact-text">Redécouvrir les vertus civiques nécessaires aux libertés individuelles et enseigner ces vertus dans le contexte de la citoyenneté marocaine contemporaine.</p>
+      </div>
+
+      <div class="impact-card fade-in fade-in-delay-1">
+        <div class="impact-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h3 class="impact-title">Communication &amp; tolérance</h3>
+        <p class="impact-text">Développer chez le jeune marocain l'aptitude à communiquer de manière constructive dans différents contextes, à faire preuve de tolérance, de solidarité et d'intérêt pour la résolution des problèmes collectifs.</p>
+      </div>
+
+      <div class="impact-card fade-in fade-in-delay-2">
+        <div class="impact-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 class="impact-title">Insertion professionnelle</h3>
+        <p class="impact-text">Faciliter l'insertion professionnelle des jeunes et les accompagner vers la réussite, en les dotant des compétences citoyennes et professionnelles nécessaires dans le monde contemporain.</p>
+      </div>
+
+    </div>
+
+    <!-- Full text highlight -->
+    <div class="fade-in" style="margin-top:5rem; background:var(--navy); border-radius:16px; padding:4.8rem; position:relative; overflow:hidden;">
+      <div style="position:absolute; top:-2rem; right:-2rem; width:200px; height:200px; border-radius:50%; background:rgba(201,152,42,0.06);"></div>
+      <div style="position:absolute; bottom:-4rem; left:-2rem; width:300px; height:300px; border-radius:50%; background:rgba(201,152,42,0.04);"></div>
+      <div style="position:relative; z-index:1;">
+        <p style="font-family:'DM Mono', monospace; font-size:1.1rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:2rem;">Perspective citoyenne</p>
+        <p style="font-family:'Playfair Display', serif; font-size:2.2rem; color:var(--white); line-height:1.6; font-style:italic; margin-bottom:1.6rem;">
+          Exprimer et comprendre des points de vue différents, connaître les notions fondamentales d'individu, de groupe, d'organisation du travail, d'égalité entre les hommes et les femmes.
+        </p>
+        <p style="font-size:1.55rem; color:rgba(255,255,255,0.6); line-height:1.8;">
+          Ces compétences, développées dès le plus jeune âge, constituent le socle d'une citoyenneté active, d'une démocratie vivante, et d'une société marocaine unie et solidaire face aux défis du XXIe siècle.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="partners-bar">
+    <p class="partners-label">Partenaires institutionnels</p>
+    <div class="partners-logos">
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_7af266ec74694aa6b21891de2cc32201~mv2.png/v1/fill/w_350,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-MEN1_0.png" alt="MEN"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_c2ffa999277e4f44bf6fd7a3a6f6cfeb~mv2.png/v1/fill/w_121,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/image_2021-03-01_213712.png" alt="Partenaire 2"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_21bc5ecfe2dd433081975602a57ac1cd~mv2.png/v1/fill/w_150,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-1.png" alt="Partenaire 3"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">EDUCIT.MA</div>
+        <div class="footer-brand-sub">Programme Ibn Khaldoun</div>
+        <p class="footer-brand-desc">Recherche scientifique sur l'éducation à la citoyenneté dans la société marocaine.</p>
+      </div>
+      <div>
+        <p class="footer-heading">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="./index.html">Accueil</a></li>
+          <li><a href="./indexproj.html">Description du Projet</a></li>
+          <li><a href="./indexprog.html">Programme de Travail</a></li>
+          <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+          <li><a href="./indexconf.html">Conférences</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-heading">Institution</p>
+        <ul class="footer-links">
+          <li><a href="#">Université Ibn Tofail</a></li>
+          <li><a href="#">ENCG · Kénitra</a></li>
+          <li><a href="#">Ministère de l'Enseignement Supérieur, de la Recherche Scientifique et de l'Innovation</a></li>
+          <li><a href="#">Centre National pour la Recherche Scientifique et Technique (CNRST)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 EDUCIT.MA · Tous droits réservés</span>
+      <span>Pr El Adlouni Wafaa · <span class="footer-gold">Université Ibn Tofail</span></span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
