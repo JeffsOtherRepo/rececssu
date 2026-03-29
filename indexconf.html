@@ -1,49 +1,873 @@
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="main.js"></script>
-<link rel="stylesheet" href="style.css">
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <title>Conferences | RECECSSU</title>
-  <meta name="viewport" content="width=1024">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conférences | EDUCIT.MA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    .conf-tabs {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 5rem;
+      flex-wrap: wrap;
+    }
+    .conf-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2.2rem;
+      border-radius: 40px;
+      border: 1.5px solid var(--border);
+      font-family: 'DM Mono', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: all var(--transition);
+      background: var(--white);
+    }
+    .conf-tab:hover {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--gold-light);
+    }
+    .conf-tab-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+    }
+    .conf-event-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 4rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 3.2rem;
+      border: 1px solid var(--cream-dark);
+      display: flex;
+      gap: 3.2rem;
+      align-items: flex-start;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .conf-event-card:hover {
+      border-color: rgba(201,152,42,0.35);
+      box-shadow: var(--shadow-md);
+    }
+    .conf-date-badge {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 10px;
+      padding: 1.6rem 2rem;
+      text-align: center;
+      flex-shrink: 0;
+      min-width: 88px;
+    }
+    .conf-date-day {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .conf-date-month {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.4rem;
+      line-height: 1.4;
+    }
+    .conf-event-body { flex: 1; }
+    .conf-event-venue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .conf-event-title-ar {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      direction: rtl;
+      margin-bottom: 0.6rem;
+      line-height: 1.45;
+    }
+    .conf-event-subtitle {
+      font-size: 1.5rem;
+      color: var(--text-light);
+      font-style: italic;
+      margin-bottom: 1.4rem;
+    }
+    .conf-event-desc {
+      font-size: 1.55rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+    }
+    .conf-event-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-top: 1.6rem;
+    }
+    .arabic-block {
+      background: var(--cream-dark);
+      border-radius: 12px;
+      padding: 3rem 3.2rem;
+      border-right: 4px solid var(--gold);
+      direction: rtl;
+      text-align: right;
+      margin-bottom: 3.2rem;
+    }
+    .arabic-block-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .arabic-block p {
+      font-size: 1.6rem;
+      color: var(--navy);
+      line-height: 1.9;
+      margin-bottom: 0.8rem;
+    }
+    .arabic-block p:last-child { margin-bottom: 0; }
+
+    .conf-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.4rem;
+      margin: 2.4rem 0 5rem;
+    }
+    .conf-gallery-item {
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: var(--navy-light);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .conf-gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .conf-gallery-item:hover img { transform: scale(1.06); }
+    .conf-gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13,27,42,0.3), transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .conf-gallery-item:hover::after { opacity: 1; }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 2.4rem;
+      margin: 3.2rem 0;
+    }
+    .video-card {
+      background: var(--navy);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(201,152,42,0.15);
+    }
+    .video-embed {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    .video-caption {
+      padding: 2rem 2.4rem;
+    }
+    .video-caption-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .video-caption-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      color: var(--white);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    /* Image-Video Pairs */
+    .media-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.4rem;
+      margin-bottom: 3.2rem;
+      align-items: stretch;
+    }
+    .media-pair-image {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--cream-dark);
+      transition: transform 0.4s ease, box-shadow var(--transition);
+    }
+    .media-pair-image:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .media-pair-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-pair-video {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(201,152,42,0.15);
+      background: var(--navy);
+    }
+    .media-pair-video .video-embed {
+      padding-bottom: 100%;
+      position: relative;
+    }
+    .media-pair-video .video-embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .media-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+      margin-bottom: 3.2rem;
+    }
+    .media-trio-item {
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--cream-dark);
+      transition: transform 0.4s ease, box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .media-trio-item:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .media-trio-image {
+      width: 100%;
+      aspect-ratio: 3/2;
+      overflow: hidden;
+    }
+    .media-trio-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .media-trio-text {
+      padding: 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .media-trio-text p {
+      font-size: 1.3rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1024px) {
+      .media-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .media-trio {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Webinaire Image + Video Pairs (Cover + Content) */
+    .webinaire-pairs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.8rem;
+      margin: 3.2rem 0;
+    }
+    .webinaire-item-pair {
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      transition: transform 0.4s ease, box-shadow var(--transition);
+    }
+    .webinaire-item-pair:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+    .webinaire-cover {
+      position: relative;
+      overflow: hidden;
+      background: var(--navy-light);
+      border-bottom: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+    .webinaire-cover img {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+    .webinaire-item-pair:hover .webinaire-cover img {
+      transform: scale(1.05);
+    }
+    .webinaire-content {
+      position: relative;
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      overflow: hidden;
+    }
+    .webinaire-video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .webinaire-video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .webinaire-label {
+      padding: 1.6rem 1.8rem 0.8rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1024px) {
+      .webinaire-pairs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .full-divider {
+      border: none;
+      border-top: 1px solid var(--cream-dark);
+      margin: 6rem 0;
+    }
+    .formations-intro {
+      font-size: 1.7rem;
+      color: var(--text-mid);
+      line-height: 1.85;
+      max-width: 760px;
+      margin-bottom: 2.8rem;
+    }
+    .formations-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      max-width: 820px;
+    }
+    .formations-list li {
+      display: flex;
+      gap: 1.6rem;
+      align-items: flex-start;
+      font-size: 1.6rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+    }
+    .formations-list li::before {
+      content: '';
+      display: block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: 0.9rem;
+    }
+    .webinaire-block {
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      border-radius: 16px;
+      padding: 5rem;
+      position: relative;
+      overflow: hidden;
+      margin: 2.4rem 0 4rem;
+    }
+    .webinaire-block::before {
+      content: '«»';
+      position: absolute;
+      top: -3rem; right: 2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 18rem;
+      color: rgba(201,152,42,0.05);
+      line-height: 1;
+      pointer-events: none;
+      letter-spacing: -1rem;
+    }
+    .webinaire-block-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.15rem;
+      color: var(--gold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+    .webinaire-block-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      color: var(--white);
+      font-style: italic;
+      margin-bottom: 2rem;
+      line-height: 1.35;
+      position: relative;
+    }
+    .webinaire-block-text {
+      font-size: 1.6rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.85;
+      max-width: 820px;
+      margin-bottom: 1.4rem;
+    }
+    .gallery-sublabel {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-light);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .conf-event-card { flex-direction: column; gap: 2rem; }
+      .video-grid { grid-template-columns: 1fr; }
+      .webinaire-block { padding: 3.2rem 2.4rem; }
+      .webinaire-block-title { font-size: 2.2rem; }
+    }
+  </style>
 </head>
+<body>
 
-
-<nav class="nav">
-        <div class="container">
-            </div>
-            <div id="mainListDiv" class="main_list">
-                <ul class="navlinks">
-                    <li><a href="./index.html">Accueil</a></li>
-                    <li><a href="./indexproj.html">Description du Projet</a></li>
-                    <li><a href="./indexprog.html">Programme de Travail</a></li>
-                    <li><a href="./indeximpact.html">Impacts Potentiels du Projet</a></li>
-					<li><a style="color:#C10F0D" href="./indexconf.html">Conférences</a></li>
-                </ul>
-            </div>
-            <span class="navTrigger">
-                <i></i>
-                <i></i>
-                <i></i>
-            </span>
-        </div>
+<nav class="nav" id="navbar">
+  <a href="./index.html" class="nav-logo">
+    <span class="nav-logo-main">EDUCIT.MA</span>
+    <span class="nav-logo-sub">Programme Ibn Khaldoun</span>
+  </a>
+  <div id="mainListDiv" class="main_list">
+    <ul class="navlinks">
+      <li><a href="./index.html">Accueil</a></li>
+      <li><a href="./indexproj.html">Description du Projet</a></li>
+      <li><a href="./indexprog.html">Programme de Travail</a></li>
+      <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+      <li><a href="./indexconf.html" class="active">Conférences</a></li>
+      <li><a href="./indexmedia.html">Présence Médiatique</a></li>
+    </ul>
+  </div>
+  <span class="navTrigger"><i></i><i></i><i></i></span>
 </nav>
 
-<iframe src="" id="conf"
-style="
-position:fixed;
-top:-130;
-left:0;
-bottom:0;
-right:0;
-width:100%;
-height:120%;
-border:0;
-margin:0;
-padding:0;
-overflow:hidden;
-z-index:0;
-">
-</iframe>
+<div class="page-wrapper">
 
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <span class="section-label">Activités scientifiques</span>
+      <h1 class="page-hero-title">Conférences, Formations &amp; Webinaires</h1>
+      <p class="page-hero-lead">
+        Des rencontres scientifiques, des séances de formation filmées et un cycle de webinaires pour engager la jeunesse marocaine dans les défis citoyens contemporains.
+      </p>
+    </div>
+  </section>
 
+  <section class="section">
 
+    <!-- Quick-jump tabs -->
+    <div class="conf-tabs fade-in">
+      <a href="#conferences" class="conf-tab">
+        <span class="conf-tab-dot"></span>Conférences
+      </a>
+      <a href="#formations" class="conf-tab">
+        <span class="conf-tab-dot"></span>Formations &amp; Vidéos
+      </a>
+      <a href="#webinaires" class="conf-tab">
+        <span class="conf-tab-dot"></span>Cycle de webinaires
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════
+         1 — CONFÉRENCES
+    ═══════════════════════════════ -->
+    <div id="conferences">
+      <span class="section-label">Événement scientifique</span>
+      <h2 class="section-title" style="margin-bottom:0.4rem;"><em>Conférences</em></h2>
+      <div class="section-divider"></div>
+
+      <!-- Conference Image + Video Pairs -->
+      <p class="gallery-sublabel fade-in">Galerie media · Conférences</p>
+      
+      <!-- Pair 1: Image 1 + Video 1 -->
+      <div class="media-pair fade-in">
+        <div class="media-pair-image">
+          <img src="https://static.wixstatic.com/media/2b2c4e_5262d386f3e54568a5075a7771fcc5bd~mv2.png/v1/fill/w_453,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot_1.png" alt="Conférence ENCG 2019 – 1" loading="lazy">
+        </div>
+        <div class="media-pair-video">
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/PLACEHOLDER_1"
+              title="Conférence ENCG 2019 – vidéo 1"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pair 2: Image 2 + Video 2 -->
+      <div class="media-pair fade-in">
+        <div class="media-pair-image">
+          <img src="https://static.wixstatic.com/media/2b2c4e_53ec645d751f43bf8abf136f97a02e31~mv2.jpeg/v1/fill/w_384,h_537,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(1).jpeg" alt="Conférence ENCG 2019 – 2" loading="lazy">
+        </div>
+        <div class="media-pair-video">
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/dXAO8BQEimA"
+              title="Conférence ENCG 2019 – vidéo 2"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pair 3: Image 3 + Text content -->
+      <div class="media-pair fade-in">
+        <div class="media-pair-image">
+          <img src="https://static.wixstatic.com/media/2b2c4e_0100cc125c55488ab1aac4954cf5fa38~mv2.jpg/v1/fill/w_384,h_537,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Picture2.jpg" alt="Conférence ENCG 2019 – 3" loading="lazy">
+        </div>
+        <div class="media-pair-video" style="background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; padding: 3rem;">
+          <div style="text-align: center;">
+            <p style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold-light); margin-bottom: 0.8rem; font-weight: 700; direction: rtl;">دور المرأة القانونية في ترسيخ قيم المواطنة</p>
+            <p style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold-light); margin-bottom: 1.6rem; font-weight: 700;">Le rôle de la femme juriste dans l'enracinement des valeurs citoyennes</p>
+            <p style="font-size: 1.2rem; color: rgba(255,255,255,0.85); line-height: 1.8; direction: rtl; text-align: right; margin-bottom: 1.2rem;">
+الندوة العلمية التي احتضنتها المدرسة الوطنية للتجارة والتسيير (ENCG) جامعة ابن طفيل بالقنيطرة بتاريخ 19 مارس 2019، تندرج في إطار مشروع « دور التربية على المواطنة في بناء مجتمع سليم ومتماسك ». وتسلط الضوء على دور المرأة القانونية الأساسي في ترسيخ وتعزيز قيم المواطنة داخل المجتمع المغربي، مع التركيز على دورها الفعال في التوعية بالحقوق والمسؤوليات المدنية.
+            </p>
+            <p style="font-size: 1.2rem; color: rgba(255,255,255,0.85); line-height: 1.8;">
+Organisée par l'École Nationale de Commerce et de Gestion (ENCG) de l'Université Ibn Tofail à Kénitra le 19 mars 2019, cette conférence scientifique s'inscrit dans le cadre du projet « Le rôle de l'éducation à la citoyenneté dans la construction d'une société saine et cohésive ». Elle met en lumière la contribution essentielle des femmes juristes dans le renforcement et la consolidation des valeurs de citoyenneté au sein de la société marocaine, en mettant l'accent sur leur rôle actif dans la sensibilisation aux droits et responsabilités citoyennes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="full-divider">
+
+    <!-- ═══════════════════════════════
+         2 — FORMATIONS & VIDEOS
+    ═══════════════════════════════ -->
+    <div id="formations">
+      <span class="section-label">Enseignement</span>
+      <h2 class="section-title" style="margin-bottom:0.4rem;"><em>Formations</em></h2>
+      <div class="section-divider"></div>
+
+      <p class="formations-intro fade-in">
+        L'université va jouer un rôle actif et créatif dans la redéfinition de la notion de citoyenneté et le faire au service d'un nouveau projet civilisationnel en posant les fondements d'un enseignement responsable. Un enseignement dont on aurait redéfini les priorités sur les plans scientifique, culturel et socio-économique :
+      </p>
+
+      <ul class="formations-list fade-in">
+        <li>Redécouvrir les vertus civiques nécessaires aux libertés individuelles et l'enseignement de ces vertus dans le contexte de la citoyenneté.</li>
+        <li>Développer chez le jeune marocain l'aptitude à communiquer de manière constructive dans différents contextes, à faire preuve de tolérance, de solidarité et d'intérêt pour la recherche de solutions à des problèmes touchant la communauté, à exprimer et comprendre des points de vue différents, à connaître les notions fondamentales d'individu, de groupe, d'organisation du travail, d'égalité entre les hommes et les femmes.</li>
+        <li>Faciliter l'insertion professionnelle des jeunes et les accompagner vers la réussite.</li>
+      </ul>
+
+      <!-- YouTube Videos with Text -->
+      <p class="gallery-sublabel fade-in" style="margin-top:4rem;">Vidéos · Séances de formation</p>
+      <div class="video-grid fade-in">
+        <div class="video-card">
+          <div class="video-embed">
+          <iframe
+            width="560" height="315"
+            src="https://www.youtube.com/embed/XhFJbfitGPc?si=-dVn9xbD33yUsOAv"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+          </div>
+          <div class="video-caption">
+            <p class="video-caption-label">Highlights</p>
+            <p class="video-caption-title">Le cycle de formation</p>
+          </div>
+      </div>
+    </div>
+
+    <hr class="full-divider">
+
+    <!-- ═══════════════════════════════
+         3 — CYCLE DE WEBINAIRES
+    ═══════════════════════════════ -->
+    <div id="webinaires">
+      <span class="section-label">Cycle en ligne</span>
+      <h2 class="section-title" style="margin-bottom:0.4rem;">Cycle de <em>webinaires</em></h2>
+      <div class="section-divider"></div>
+
+      <div class="webinaire-block fade-in">
+        <p class="webinaire-block-label">Cycle de webinaires</p>
+        <h3 class="webinaire-block-title">« Ça nous concerne, parlons-en »</h3>
+        <p class="webinaire-block-text">
+          Le Cycle de webinaires « Ça nous concerne, parlons-en », organisé autour de thèmes qui préoccupent la jeunesse marocaine, permet aux jeunes — qui sont au cœur des problématiques mondiales actuelles — de participer pleinement à la vie de la société et de développer des attitudes civiques comme l'intérêt pour les choses publiques, la confiance dans les institutions, l'engagement dans des projets concrets.
+        </p>
+        <p class="webinaire-block-text">
+          Ces attitudes sont très importantes pour déclencher la participation des étudiants dans la gouvernance et dans la vie de leurs établissements. Les nouveaux métiers, l'économie sociale et solidaire ou les nouvelles technologies sont des domaines sur lesquels la jeunesse a des atouts à faire valoir. Il est donc indispensable d'investir maintenant dans les citoyens de demain pour faire face aux grands enjeux mondiaux.
+        </p>
+      </div>
+
+      <!-- Webinaire Image + Video Pairs -->
+      <p class="gallery-sublabel fade-in">Galerie media · Cycle de webinaires</p>
+      <div class="webinaire-pairs-grid fade-in">
+        <!-- Item 1 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_a3ddf529212346bf96f1dfe7773d643f~mv2.jpg/v1/fill/w_384,h_531,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2b2c4e_a3ddf529212346bf96f1dfe7773d643f~mv2.jpg" alt="Webinaire – 1" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/FsE5UGhzEzg"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_0b8790a04a7d499bb5c73c8ae93b8323~mv2.jpg/v1/fill/w_384,h_534,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(6).jpg" alt="Webinaire – 2" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/T4ELgiDca6Y"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_e1a9ab4d0e1f49a2bbdec9b8c4519a70~mv2.jpg/v1/fill/w_384,h_538,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(4).jpg" alt="Webinaire – 3" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/qEcrcc-vyAk"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_851b58835ecd40c181b6da483a2879be~mv2.jpg/v1/fill/w_384,h_538,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(7).jpg" alt="Webinaire – 4" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/WLarYqYUDsQ"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_eece3cce25c64106928339997d671c43~mv2.jpg/v1/fill/w_384,h_537,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(2).jpg" alt="Webinaire – 5" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/OWicsQKTv50"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_c959fcee5aaf4adeb27b4f7beaa098c0~mv2.jpg/v1/fill/w_384,h_533,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(3).jpg" alt="Webinaire – 6" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/CmwowE2JfmI"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_4b38e156369546a8a999512652ab1955~mv2.jpg/v1/fill/w_384,h_531,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(5).jpg" alt="Webinaire – 7" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/DsaIsTLFWNE"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="webinaire-item-pair">
+          <div class="webinaire-cover">
+            <img src="https://static.wixstatic.com/media/2b2c4e_57c0f0d29c964e33a2e5fdf9a48c1c54~mv2.jpg/v1/fill/w_384,h_537,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/%20(8).jpg" alt="Webinaire – 8" loading="lazy">
+          </div>
+          <div class="webinaire-content">
+            <div class="webinaire-label">Webinaire</div>
+            <div class="webinaire-video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/N9na7NzDK94"
+                title="YouTube video player"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PARTNERS -->
+  <div class="partners-bar">
+    <p class="partners-label">Partenaires institutionnels</p>
+    <div class="partners-logos">
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_7af266ec74694aa6b21891de2cc32201~mv2.png/v1/fill/w_350,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-MEN1_0.png" alt="Ministère de l'Enseignement Supérieur, de la Recherche Scientifique et de l'Innovation Nationale"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_c2ffa999277e4f44bf6fd7a3a6f6cfeb~mv2.png/v1/fill/w_121,h_140,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/image_2021-03-01_213712.png" alt="Partenaire 2"></div>
+      <div class="partner-logo"><img src="https://static.wixstatic.com/media/2b2c4e_21bc5ecfe2dd433081975602a57ac1cd~mv2.png/v1/fill/w_150,h_139,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo-1.png" alt="Partenaire 3"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">EDUCIT.MA</div>
+        <div class="footer-brand-sub">Programme Ibn Khaldoun</div>
+        <p class="footer-brand-desc">Recherche scientifique sur l'éducation à la citoyenneté dans la société marocaine.</p>
+      </div>
+      <div>
+        <p class="footer-heading">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="./index.html">Accueil</a></li>
+          <li><a href="./indexproj.html">Description du Projet</a></li>
+          <li><a href="./indexprog.html">Programme de Travail</a></li>
+          <li><a href="./indeximpact.html">Impacts Potentiels</a></li>
+          <li><a href="./indexconf.html">Conférences</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-heading">Institution</p>
+        <ul class="footer-links">
+          <li><a href="#">Université Ibn Tofail</a></li>
+          <li><a href="#">ENCG · Kénitra</a></li>
+          <li><a href="#">Ministère de l'Enseignement Supérieur, de la Recherche Scientifique et de l'Innovation</a></li>
+          <li><a href="#">Centre National pour la Recherche Scientifique et Technique (CNRST)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 EDUCIT.MA · Tous droits réservés</span>
+      <span>Pr El Adlouni Wafaa · <span class="footer-gold">Université Ibn Tofail</span></span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
